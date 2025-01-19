@@ -28,6 +28,8 @@ var data = document.getElementsByClassName("data")[0].textContent.trim();
 var investments = JSON.parse(data);
 
 
+// DataTables warning: table id=DataTables_Table_0 - Requested unknown parameter 'purchase' for row 0, column 1. For more information about this error, please see https://datatables.net/tn/4
+
 var dataSet = [];
 
 investments.forEach(function(investment) {

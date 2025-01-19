@@ -38,6 +38,85 @@ class InvestmentsRepository
     }
 
 
+    public function getInvestmentsByTypeId(int $typeId): Type
+    {
+        $daoFees = $this->investmentsDao->getInvestmentPurchaseFee();
+        $daoInvestments = $this->investmentsDao->getInvestment();
+        $daoPurchases = $this->investmentsDao->getInvestmentPurchase();
+        $daoTypes = $this->investmentsDao->getInvestmentType();
+        $daoZuordnungen = $this->investmentsDao->getInvestmentPurchaseFeeZuordnung();
+
+        foreach ($daoTypes as $daoType)
+        {
+            if ($daoType->id !== $typeId)
+            {
+                continue;
+            }
+
+            $investments = [];
+
+            foreach ($daoInvestments as $daoInvestment)
+            {
+                if ($daoInvestment->typeId !== $daoType->id)
+                {
+                    continue;
+                }
+
+                $purchases = [];
+
+                foreach ($daoPurchases as $daoPurchase)
+                {
+                    if ($daoPurchase->investmentId !== $daoInvestment->id)
+                    {
+                        continue;
+                    }
+
+                    $fees = [];
+
+                    foreach ($daoZuordnungen as $daoZuordnung)
+                    {
+                        if ($daoZuordnung->purchaseId !== $daoPurchase->id)
+                        {
+                            continue;
+                        }
+
+                        $daoFee = $this->getFeeForFeeId($daoZuordnung->feeId, $daoFees);
+
+                        $fee = new Fee();
+                        $fee->fee = $daoFee->fee;
+                        $fee->name = $daoFee->name;
+
+                        $fees[] = $fee;
+                    }
+
+                    $purchase = new Purchase();
+                    $purchase->fees = $fees;
+                    $purchase->hinweise = $daoPurchase->hinweise;
+                    $purchase->purchaseDate = $daoPurchase->purchaseDate;
+                    $purchase->purchaseCourse = $daoPurchase->purchaseCourse;
+                    $purchase->purchasePrice = $daoPurchase->purchasePrice;
+                    $purchase->quantity = $daoPurchase->quantity;
+
+                    $purchases[] = $purchase;
+                }
+
+                $investment = new Investment();
+                $investment->link = $daoInvestment->linkFinanzenNet;
+                $investment->name = $daoInvestment->name;
+                $investment->purchases = $purchases;
+
+                $investments[] = $investment;
+            }
+
+            $type = new Type();
+            $type->investments = $investments;
+            $type->name = $daoType->name;
+
+            return $type;
+        }
+    }
+
+
     public function getInvestmentsDevelopment(): array
     {
         $investmentsDevelopment = [];
@@ -59,6 +138,32 @@ class InvestmentsRepository
         }
 
         return $investmentsDevelopment;
+    }
+
+
+    private function getFeeForFeeId(int $feeId, array $fees)
+    {
+        $matchedFees = [];
+
+        foreach ($fees as $fee)
+        {
+            if ($fee->id === $feeId)
+            {
+                $matchedFees[] = $fee;
+            }
+        }
+
+        if (count($matchedFees) === 0)
+        {
+            throw new \Exception("No fee with feeId $feeId found!");
+        }
+
+        if (count($matchedFees) === 1)
+        {
+            return $matchedFees[0];
+        }
+
+        throw new \Exception("More than one fee with feeId $feeId found!");
     }
 }
 
@@ -95,4 +200,37 @@ class InvestmentDevelopmentItem implements \JsonSerializable
             "formattedDate" => $this->timestamp->format("d.m")
         ];
     }
+}
+
+
+class Type
+{
+    public array $investments;
+    public string $name;
+}
+
+
+class Investment
+{
+    public string $link;
+    public string $name;
+    public array $purchases;
+}
+
+
+class Purchase
+{
+    public array $fees;
+    public string|null $hinweise;
+    public float $purchaseCourse;
+    public \DateTime $purchaseDate;
+    public float $purchasePrice;
+    public string $quantity;
+}
+
+
+class Fee
+{
+    public float $fee;
+    public string $name;
 }

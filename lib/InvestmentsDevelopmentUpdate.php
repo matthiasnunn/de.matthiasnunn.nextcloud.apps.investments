@@ -3,7 +3,6 @@
 namespace OCA\Investments;
 
 use OCA\Investments\AppInfo\Application;
-use OCA\Investments\Services\ApiService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\NotificationService;
@@ -45,7 +44,7 @@ class InvestmentsDevelopmentUpdate
 
     public function update(string $type, string $typeId): void
     {
-        $investmentIncludedModel = ApiService::getInvestmentsByType($this->clientService, $type)->investmentIncludedModel;
+        $investmentIncludedModel = $this->investmentsService->getInvestmentsByType($this->clientService, $type)->investmentIncludedModel;
 
         $totalCurrentPrice = $investmentIncludedModel->totalCurrentPrice;
         $totalPurchasePrice = $investmentIncludedModel->totalPurchasePrice;
