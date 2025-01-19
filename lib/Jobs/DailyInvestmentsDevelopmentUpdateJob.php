@@ -9,21 +9,18 @@ use OCA\Shared\Services\UserFilesService;
 use OCP\ILogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
-use OCP\Http\Client\IClientService;
 
 
 class DailyInvestmentsDevelopmentUpdateJob extends TimedJob
 {
-    private $clientService;
     private $logger;
     private $userFilesSerivce;
 
 
-    public function __construct(IClientService $clientService, ILogger $logger, ITimeFactory $time)
+    public function __construct(ILogger $logger, ITimeFactory $time)
     {
         parent::__construct($time);
 
-        $this->clientService = $clientService;
         $this->logger = $logger;
         $this->userFilesSerivce = new UserFilesService(User::USER);
     }
@@ -38,7 +35,7 @@ class DailyInvestmentsDevelopmentUpdateJob extends TimedJob
 
         $this->logger->info("DailyInvestmentsDevelopmentUpdateJob started", ["app" => Application::APP_ID]);
 
-        $investmentsDevelopmentUpdate = new InvestmentsDevelopmentUpdate($this->clientService, $this->logger, $this->userFilesSerivce);
+        $investmentsDevelopmentUpdate = new InvestmentsDevelopmentUpdate($this->logger, $this->userFilesSerivce);
         $investmentsDevelopmentUpdate->updateAll();
     }
 

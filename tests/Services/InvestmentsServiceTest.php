@@ -19,6 +19,10 @@ class InvestmentsServiceTest
         $this->investmentsService = new InvestmentsService(new UserFilesService(User::ADMIN));
 
         $this->addInvestmentDevelopment();
+        $this->getInvestmentsByTypeId(1);
+        $this->getInvestmentsByTypeId(2);
+        $this->getInvestmentsByTypeId(3);
+        $this->getInvestmentsByTypeId(4);
         $this->getInvestmentsDevelopment();
     }
 
@@ -32,7 +36,7 @@ class InvestmentsServiceTest
         $timestamp = new \DateTime();
         $typeId = 1;
 
-        $result = $this->investmentsService->addInvestmentDevelopment(
+        $this->investmentsService->addInvestmentDevelopment(
             $currentPrice,
             $purchasePrice,
             $reinertrag,
@@ -40,6 +44,20 @@ class InvestmentsServiceTest
             $timestamp,
             $typeId
         );
+    }
+
+
+    private function getInvestments()
+    {
+        $result = $this->investmentsService->getInvestments();
+
+        print_r($result);
+    }
+
+
+    private function getInvestmentsByTypeId(string $typeId)
+    {
+        $result = $this->investmentsService->getInvestmentsByTypeId($typeId);
 
         print_r($result);
     }

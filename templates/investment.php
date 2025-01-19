@@ -47,22 +47,22 @@
                     Übersicht
                 </a>
             </li>
-            <li class="<?php echo ($type === 'Aktie') ? 'active' : ''; ?>">
+            <li class="<?php echo ($type === 3) ? 'active' : ''; ?>">
                 <a href="aktien">
                     Aktien
                 </a>
             </li>
-            <li class="<?php echo ($type === 'Devise') ? 'active' : ''; ?>">
+            <li class="<?php echo ($type === 2) ? 'active' : ''; ?>">
                 <a href="devisen">
                     Devisen
                 </a>
             </li>
-            <li class="<?php echo ($type === 'ETF') ? 'active' : ''; ?>">
+            <li class="<?php echo ($type === 4) ? 'active' : ''; ?>">
                 <a href="etfs">
                     ETFs
                 </a>
             </li>
-            <li class="<?php echo ($type === 'Rohstoff') ? 'active' : ''; ?>">
+            <li class="<?php echo ($type === 1) ? 'active' : ''; ?>">
                 <a href="rohstoffe">
                     Rohstoffe
                 </a>

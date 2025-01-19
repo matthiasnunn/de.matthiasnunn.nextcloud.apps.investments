@@ -3,7 +3,6 @@
 namespace OCA\Investments\Controller;
 
 use OCA\Investments\AppInfo\Application;
-use OCA\Investments\Services\ApiService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
@@ -14,23 +13,20 @@ use OCP\AppFramework\Http\RedirectResponse;
 use OCP\AppFramework\Http\TemplateResponse;
 use OCP\AppFramework\Http\Attribute\NoAdminRequired;
 use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
-use OCP\Http\Client\IClientService;
 
 
 class MainController extends Controller
 {
-    private $clientService;
     private $investmentsService;
     private $urlGenerator;
 
 
-    public function __construct($AppName, IRequest $request, IClientService $clientService, IURLGenerator $urlGenerator)
+    public function __construct($AppName, IRequest $request, IURLGenerator $urlGenerator)
     {
         parent::__construct($AppName, $request);
 
         $userFilesService = new UserFilesService(User::USER);
 
-        $this->clientService = $clientService;
         $this->investmentsService = new InvestmentsService($userFilesService);
         $this->urlGenerator = $urlGenerator;
     }
@@ -50,35 +46,35 @@ class MainController extends Controller
     #[NoCSRFRequired]
     public function investmentAktien(): TemplateResponse
     {
-        return $this->investment("Aktie");
+        return $this->investment(3);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
     public function investmentDevisen(): TemplateResponse
     {
-        return $this->investment("Devise");
+        return $this->investment(2);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
     public function investmentETFs(): TemplateResponse
     {
-        return $this->investment("ETF");
+        return $this->investment(4);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
     public function investmentRohstoffe(): TemplateResponse
     {
-        return $this->investment("Rohstoff");
+        return $this->investment(1);
     }
 
     #[NoAdminRequired]
     #[NoCSRFRequired]
-    private function investment(string $type): TemplateResponse
+    private function investment(int $type): TemplateResponse
     {
-        $investmentResponse = ApiService::getInvestmentsByType($this->clientService, $type);
+        $investmentResponse = $this->investmentsService->getInvestmentsByTypeId($type);
 
         $parameters = [
             "data" => json_encode($investmentResponse->data),
@@ -94,10 +90,10 @@ class MainController extends Controller
     #[NoCSRFRequired]
     public function uebersicht(): TemplateResponse
     {
-        $aktien = ApiService::getInvestmentsByType($this->clientService, "Aktie");
-        $devisen = ApiService::getInvestmentsByType($this->clientService, "Devise");
-        $etfs = ApiService::getInvestmentsByType($this->clientService, "ETF");
-        $rohstoffe = ApiService::getInvestmentsByType($this->clientService, "Rohstoff");
+        $aktien = $this->investmentsService->getInvestmentsByTypeId(3);
+        $devisen = $this->investmentsService->getInvestmentsByTypeId(2);
+        $etfs = $this->investmentsService->getInvestmentsByTypeId(4);
+        $rohstoffe = $this->investmentsService->getInvestmentsByTypeId(1);
 
         $investmentsDevelopment = $this->investmentsService->getInvestmentsDevelopment();
 

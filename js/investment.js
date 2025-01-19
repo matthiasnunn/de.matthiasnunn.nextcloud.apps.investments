@@ -37,7 +37,7 @@ investments.forEach(function(investment) {
                 link: investment.link,
                 name: investment.name
             },
-            "purchase": purchase.purchase,
+            "purchaseDate": purchase.purchaseDate,
             "quantity": purchase.quantity,
             "purchasePrice": {
                 "fees": purchase.fees.map(function(fee) {
@@ -67,7 +67,7 @@ new DataTable(".table", {
         },
         {
             className: "dt-body-right",  // rechtsbündig
-            data: "purchase",
+            data: "purchaseDate",
             render: {
                 display: function (data) {
                     return new Date(data.date).toDateString();

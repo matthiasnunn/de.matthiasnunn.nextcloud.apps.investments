@@ -3,25 +3,21 @@
 namespace OCA\Investments;
 
 use OCA\Investments\AppInfo\Application;
-use OCA\Investments\Services\ApiService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\NotificationService;
 use OCA\Shared\Services\UserFilesService;
 use OCP\ILogger;
-use OCP\Http\Client\IClientService;
 
 
 class InvestmentsDevelopmentUpdate
 {
-    private $clientService;
     private $investmentsService;
     private $logger;
 
 
-    public function __construct(IClientService $clientService, ILogger $logger, UserFilesService $userFilesService)
+    public function __construct(ILogger $logger, UserFilesService $userFilesService)
     {
-        $this->clientService = $clientService;
         $this->investmentsService = new InvestmentsService($userFilesService);
         $this->logger = $logger;
     }
@@ -45,7 +41,7 @@ class InvestmentsDevelopmentUpdate
 
     public function update(string $type, string $typeId): void
     {
-        $investmentIncludedModel = ApiService::getInvestmentsByType($this->clientService, $type)->investmentIncludedModel;
+        $investmentIncludedModel = $this->investmentsService->getInvestmentsByTypeId($typeId)->investmentIncludedModel;
 
         $totalCurrentPrice = $investmentIncludedModel->totalCurrentPrice;
         $totalPurchasePrice = $investmentIncludedModel->totalPurchasePrice;

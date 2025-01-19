@@ -11,9 +11,5 @@ docker exec --user www-data nextcloud php /var/www/html/custom_apps/investments/
 ```
 
 ```
-docker exec --user www-data nextcloud php /var/www/html/custom_apps/investments/tests/Services/ApiServiceTest.php
-```
-
-```
 docker exec --user www-data nextcloud php /var/www/html/custom_apps/investments/tests/Services/InvestmentsServiceTest.php
 ```

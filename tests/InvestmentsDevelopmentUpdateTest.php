@@ -7,7 +7,6 @@ require_once "/var/www/html/lib/base.php";
 use OCA\Investments\InvestmentsDevelopmentUpdate;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
-use OCP\Http\Client\IClientService;
 
 
 class InvestmentsDevelopmentUpdateTest
@@ -17,11 +16,10 @@ class InvestmentsDevelopmentUpdateTest
 
     public function __construct()
     {
-        $clientService = \OC::$server->get(IClientService::class);
         $logger = \OC::$server->getLogger();
         $userFilesSerivce = new UserFilesService(User::ADMIN);
 
-        $this->investmentsDevelopmentUpdate = new InvestmentsDevelopmentUpdate($clientService, $logger, $userFilesSerivce);
+        $this->investmentsDevelopmentUpdate = new InvestmentsDevelopmentUpdate($logger, $userFilesSerivce);
 
         $this->updateAll();
     }

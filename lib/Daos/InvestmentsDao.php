@@ -8,6 +8,7 @@ use OCA\Shared\Services\UserFilesService;
 class InvestmentsDao
 {
     private const DIR = "Investments";
+    private const INVESTMENT = "investment.json";
     private const INVESTMENT_TYPE = "investment_type.json";
     private const INVESTMENT_TYPE_DEVELOPMENT = "investment_type_development.json";
 
@@ -18,6 +19,12 @@ class InvestmentsDao
     public function __construct(UserFilesService $userFilesService)
     {
         return $this->userFilesService = $userFilesService;
+    }
+
+
+    public function getInvestment(): array
+    {
+        return $this->get(self::INVESTMENT, Investment::class);
     }
 
 
@@ -41,13 +48,88 @@ class InvestmentsDao
     }
 
 
-    private function get(string $file, string $class): array
+    private function get(string $fileName, string $class): array
     {
-        $file = $this->userFilesService->getFile(self::DIR, $file);
+        $file = $this->userFilesService->getFile(self::DIR, $fileName);
 
         $json = json_decode($file, true);
 
         return array_map([$class, "fromFile"], $json);
+    }
+}
+
+
+class Investment
+{
+    public int $id;
+    public string|null $isin;
+    public string $linkFinanzen100De;
+    public string $linkFinanzenNet;
+    public string $name;
+    public array $purchases;
+    public string|null $symbol;
+    public string|null $symbolYahooFinanzen;
+    public int $typeId;
+    public string|null $wkn;
+
+    public static function fromFile(array $json)
+    {
+        $investment = new Investment();
+        $investment->id = $json["id"];
+        $investment->isin = $json["isin"];
+        $investment->linkFinanzen100De = $json["link_finanzen100_de"];
+        $investment->linkFinanzenNet = $json["link_finanzen_net"];
+        $investment->name = $json["name"];
+        $investment->purchases = array_map([InvestmentPurchase::class, "fromFile"], $json["purchases"]);
+        $investment->symbol = $json["symbol"];
+        $investment->symbolYahooFinanzen = $json["symbol_yahoo_finanzen"];
+        $investment->typeId = $json["type_id"];
+        $investment->wkn = $json["wkn"];
+
+        return $investment;
+    }
+}
+
+
+class InvestmentPurchase
+{
+    public array $fees;
+    public string|null $hinweise;
+    public \DateTime $lastUpdated;
+    public float $purchaseCourse;
+    public \DateTime $purchaseDate;
+    public float $purchasePrice;
+    public string $quantity;
+
+    public static function fromFile(array $json)
+    {
+        $investmentPurchase = new InvestmentPurchase();
+        $investmentPurchase->fees = array_map([InvestmentPurchaseFee::class, "fromFile"], $json["fees"]);
+        $investmentPurchase->hinweise = $json["hinweise"];
+        $investmentPurchase->lastUpdated = new \DateTime($json["last_updated"]);
+        $investmentPurchase->purchaseCourse = $json["purchase_course"];
+        $investmentPurchase->purchaseDate = new \DateTime($json["purchase_date"]);
+        $investmentPurchase->purchasePrice = $json["purchase_price"];
+        $investmentPurchase->quantity = $json["quantity"];
+
+        return $investmentPurchase;
+    }
+}
+
+
+class InvestmentPurchaseFee
+{
+    public float $fee;
+    public string $name;
+
+    public static function fromFile(array $json)
+    {
+        $investmentPurchaseFee = new InvestmentPurchaseFee();
+        $investmentPurchaseFee->fee = $json["fee"];
+        $investmentPurchaseFee->id = $json["id"];
+        $investmentPurchaseFee->name = $json["name"];
+
+        return $investmentPurchaseFee;
     }
 }
 

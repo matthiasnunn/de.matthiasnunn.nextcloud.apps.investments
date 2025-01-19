@@ -3,6 +3,9 @@
 namespace OCA\Investments\Repositories;
 
 use OCA\Investments\Daos\InvestmentsDao;
+use OCA\Investments\Daos\Investment as DAOInvestment;
+use OCA\Investments\Daos\InvestmentPurchase;
+use OCA\Investments\Daos\InvestmentPurchaseFee;
 use OCA\Investments\Daos\InvestmentTypeDevelopment;
 use OCA\Shared\Services\UserFilesService;
 
@@ -18,7 +21,7 @@ class InvestmentsRepository
     }
 
 
-    public function addInvestmentDevelopment(float $currentPrice, float $purchasePrice, float $reinertrag, float $rendite, \DateTime $timestamp, string $typeId): void
+    public function addInvestmentDevelopment(float $currentPrice, float $purchasePrice, float $reinertrag, float $rendite, \DateTime $timestamp, int $typeId): void
     {
         $investmentTypeDevelopmentArr = $this->investmentsDao->getInvestmentTypeDevelopment();
 
@@ -35,6 +38,43 @@ class InvestmentsRepository
         $investmentTypeDevelopmentArr[] = $investmentTypeDevelopment;
 
         $this->investmentsDao->setInvestmentTypeDevelopment($investmentTypeDevelopmentArr);
+    }
+
+
+    public function getInvestmentsByTypeId(int $typeId): Type
+    {
+        $daoInvestments = $this->investmentsDao->getInvestment();
+        $daoTypes = $this->investmentsDao->getInvestmentType();
+
+        $typeName = null;
+
+        foreach ($daoTypes as $daoType)
+        {
+            if ($daoType->id !== $typeId)
+            {
+                continue;
+            }
+
+            $typeName = $daoType->name;
+        }
+
+        $investments = [];
+
+        foreach ($daoInvestments as $daoInvestment)
+        {
+            if ($daoInvestment->typeId !== $typeId)
+            {
+                continue;
+            }
+
+            $investments[] = Investment::fromDao($daoInvestment);
+        }
+
+        $type = new Type();
+        $type->investments = $investments;
+        $type->name = $typeName;
+
+        return $type;
     }
 
 
@@ -94,5 +134,70 @@ class InvestmentDevelopmentItem implements \JsonSerializable
             "rendite" => $this->rendite,
             "formattedDate" => $this->timestamp->format("d.m")
         ];
+    }
+}
+
+
+class Type
+{
+    public array $investments;
+    public string $name;
+}
+
+
+class Investment
+{
+    public string $link;
+    public string $name;
+    public array $purchases;
+
+    public static function fromDao(DAOInvestment $daoInvestment)
+    {
+        $investment = new Investment();
+        $investment->link = $daoInvestment->linkFinanzenNet;
+        $investment->name = $daoInvestment->name;
+        $investment->purchases = array_map([Purchase::class, "fromDao"], $daoInvestment->purchases);
+
+        return $investment;
+    }
+}
+
+
+class Purchase
+{
+    public array $fees;
+    public string|null $hinweise;
+    public float $purchaseCourse;
+    public \DateTime $purchaseDate;
+    public float $purchasePrice;
+    public string $quantity;
+
+    public static function fromDao(InvestmentPurchase $daoPurchase)
+    {
+        $purchase = new Purchase();
+        $purchase->fees = array_map([Fee::class, "fromDao"], $daoPurchase->fees);
+        $purchase->hinweise = $daoPurchase->hinweise;
+        $purchase->purchaseDate = $daoPurchase->purchaseDate;
+        $purchase->purchaseCourse = $daoPurchase->purchaseCourse;
+        $purchase->purchasePrice = $daoPurchase->purchasePrice;
+        $purchase->quantity = $daoPurchase->quantity;
+
+        return $purchase;
+    }
+}
+
+
+class Fee
+{
+    public float $fee;
+    public string $name;
+
+    public static function fromDao(InvestmentPurchaseFee $daoFee)
+    {
+        $fee = new Fee();
+        $fee->fee = $daoFee->fee;
+        $fee->name = $daoFee->name;
+
+        return $fee;
     }
 }
