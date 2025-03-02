@@ -24,6 +24,7 @@ class InvestmentsDevelopmentServiceTest
 
         $this->addInvestmentDevelopment();
         $this->getInvestmentsDevelopment();
+        $this->getInvestmentsTrends();
     }
 
 
@@ -50,6 +51,14 @@ class InvestmentsDevelopmentServiceTest
     private function getInvestmentsDevelopment(): void
     {
         $result = $this->investmentsDevelopmentService->getInvestmentsDevelopment();
+
+        print_r($result);
+    }
+
+
+    private function getInvestmentsTrends(): void
+    {
+        $result = $this->investmentsDevelopmentService->getInvestmentsTrends();
 
         print_r($result);
     }

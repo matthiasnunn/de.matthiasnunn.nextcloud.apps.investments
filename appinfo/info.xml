@@ -21,12 +21,12 @@
     <namespace>Investments</namespace>
     <navigations>
         <navigation>
-            <icon>chart-line-solid.svg</icon>
+            <icon>chart-line-solid_white.svg</icon>
             <name>Investments</name>
             <route>investments.main.index</route><!-- <id>.<Controller>.<Methode> -->
         </navigation>
     </navigations>
     <repository>https://github.com/matthiasnunn/de.matthiasnunn.nextcloud.apps.investments</repository>
     <summary>Investments app</summary>
-    <version>1.0.0</version>
+    <version>1.1.0</version>
 </info>
