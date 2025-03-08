@@ -4,7 +4,10 @@ namespace OCA\Investments\Tests\Services;
 
 require_once "/var/www/html/lib/base.php";
 
+use OCA\Investments\Repositories\FinanzenNetRepository;
+use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\InvestmentsService;
+use OCA\Investments\Services\FinanzenService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
 
@@ -16,7 +19,13 @@ class InvestmentsServiceTest
 
     public function __construct()
     {
-        $this->investmentsService = new InvestmentsService(new UserFilesService(User::ADMIN));
+        $finanzenRepository = new FinanzenNetRepository();
+        $finanzenService = new FinanzenService($finanzenRepository);
+
+        $userFilesService = new UserFilesService(User::ADMIN);
+        $investmentsRepository = new InvestmentsRepository($userFilesService);
+
+        $this->investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
 
         $this->addInvestmentDevelopment();
         $this->getInvestmentsByTypeId(1);

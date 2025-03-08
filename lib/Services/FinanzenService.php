@@ -2,15 +2,20 @@
 
 namespace OCA\Investments\Services;
 
-use OCA\Investments\Repositories\Finanzen100DeRepository;
-use OCA\Investments\Repositories\FinanzenNetRepository;
+use OCA\Investments\Repositories\IFinanzenRepository;
 
 
 class FinanzenService
 {
-    public static function getCurrentCourse($link): float
+    private IFinanzenRepository $finanzenRepository;
+
+    public function __construct(IFinanzenRepository $finanzenRepository)
     {
-      //return Finanzen100DeRepository::parse($link);
-        return FinanzenNetRepository::parse($link);
+        $this->finanzenRepository = $finanzenRepository;
+    }
+
+    public function getCurrentCourse($link): float
+    {
+        return $this->finanzenRepository->parse($link);
     }
 }

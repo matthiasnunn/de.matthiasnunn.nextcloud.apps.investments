@@ -6,7 +6,6 @@ use OCA\Investments\AppInfo\Application;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\NotificationService;
-use OCA\Shared\Services\UserFilesService;
 use OCP\ILogger;
 
 
@@ -16,9 +15,9 @@ class InvestmentsDevelopmentUpdate
     private $logger;
 
 
-    public function __construct(ILogger $logger, UserFilesService $userFilesService)
+    public function __construct(ILogger $logger, InvestmentsService $investmentsService)
     {
-        $this->investmentsService = new InvestmentsService($userFilesService);
+        $this->investmentsService = $investmentsService;
         $this->logger = $logger;
     }
 

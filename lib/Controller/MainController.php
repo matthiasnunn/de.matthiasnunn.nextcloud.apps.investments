@@ -3,6 +3,9 @@
 namespace OCA\Investments\Controller;
 
 use OCA\Investments\AppInfo\Application;
+use OCA\Investments\Repositories\FinanzenNetRepository;
+use OCA\Investments\Repositories\InvestmentsRepository;
+use OCA\Investments\Services\FinanzenService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
@@ -25,9 +28,13 @@ class MainController extends Controller
     {
         parent::__construct($AppName, $request);
 
-        $userFilesService = new UserFilesService(User::USER);
+        $finanzenRepository = new FinanzenNetRepository();
+        $finanzenService = new FinanzenService($finanzenRepository);
 
-        $this->investmentsService = new InvestmentsService($userFilesService);
+        $userFilesService = new UserFilesService(User::USER);
+        $investmentsRepository = new InvestmentsRepository($userFilesService);
+
+        $this->investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
         $this->urlGenerator = $urlGenerator;
     }
 

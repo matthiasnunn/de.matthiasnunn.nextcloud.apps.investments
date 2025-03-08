@@ -2,10 +2,12 @@
 
 namespace OCA\Investments\Repositories;
 
+use OCA\Investments\Repositories\IFinanzenRepository;
 
-class Finanzen100DeRepository
+
+class Finanzen100DeRepository implements IFinanzenRepository
 {
-    public static function parse(string $link): float
+    public function parse(string $link): float
     {
         $responseBody = file_get_contents($link);
 

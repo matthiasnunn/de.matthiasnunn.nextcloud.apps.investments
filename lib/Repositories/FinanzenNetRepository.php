@@ -2,10 +2,12 @@
 
 namespace OCA\Investments\Repositories;
 
+use OCA\Investments\Repositories\IFinanzenRepository;
 
-class FinanzenNetRepository
+
+class FinanzenNetRepository implements IFinanzenRepository
 {
-    public static function parse(string $link): float
+    public function parse(string $link): float
     {
         $curl = curl_init();
 

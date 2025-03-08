@@ -3,17 +3,19 @@
 namespace OCA\Investments\Services;
 
 use OCA\Investments\Repositories\InvestmentsRepository;
-use OCA\Shared\Services\UserFilesService;
+use OCA\Investments\Services\FinanzenService;
 
 
 class InvestmentsService
 {
-    private $investmentsRepository;
+    private FinanzenService $finanzenService;
+    private InvestmentsRepository $investmentsRepository;
 
 
-    public function __construct(UserFilesService $userFilesService)
+    public function __construct(FinanzenService $finanzenService, InvestmentsRepository $investmentsRepository)
     {
-        $this->investmentsRepository = new InvestmentsRepository($userFilesService);
+        $this->finanzenService = $finanzenService;
+        $this->investmentsRepository = $investmentsRepository;
     }
 
 
@@ -70,7 +72,7 @@ class InvestmentsService
 
     private function addInfos($investment): void
     {
-        $investment->currentCourse = FinanzenService::getCurrentCourse($investment->link);
+        $investment->currentCourse = $this->finanzenService->getCurrentCourse($investment->link);
 
         foreach ($investment->purchases as $purchase)
         {
