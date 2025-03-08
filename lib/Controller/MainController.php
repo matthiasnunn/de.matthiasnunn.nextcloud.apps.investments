@@ -6,6 +6,7 @@ use OCA\Investments\AppInfo\Application;
 use OCA\Investments\Repositories\FinanzenNetRepository;
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\FinanzenService;
+use OCA\Investments\Services\InvestmentsDevelopmentService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
@@ -20,6 +21,7 @@ use OCP\AppFramework\Http\Attribute\NoCSRFRequired;
 
 class MainController extends Controller
 {
+    private $investmentsDevelopmentService;
     private $investmentsService;
     private $urlGenerator;
 
@@ -34,6 +36,7 @@ class MainController extends Controller
         $userFilesService = new UserFilesService(User::USER);
         $investmentsRepository = new InvestmentsRepository($userFilesService);
 
+        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository);
         $this->investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
         $this->urlGenerator = $urlGenerator;
     }
@@ -102,7 +105,7 @@ class MainController extends Controller
         $etfs = $this->investmentsService->getInvestmentsByTypeId(4);
         $rohstoffe = $this->investmentsService->getInvestmentsByTypeId(1);
 
-        $investmentsDevelopment = $this->investmentsService->getInvestmentsDevelopment();
+        $investmentsDevelopment = $this->investmentsDevelopmentService->getInvestmentsDevelopment();
 
         $parameters = [
             "aktien" => json_encode($aktien->investmentIncludedModel),

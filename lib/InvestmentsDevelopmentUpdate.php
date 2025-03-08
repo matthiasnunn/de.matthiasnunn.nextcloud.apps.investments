@@ -3,6 +3,7 @@
 namespace OCA\Investments;
 
 use OCA\Investments\AppInfo\Application;
+use OCA\Investments\Services\InvestmentsDevelopmentService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\NotificationService;
@@ -11,12 +12,14 @@ use OCP\ILogger;
 
 class InvestmentsDevelopmentUpdate
 {
-    private $investmentsService;
-    private $logger;
+    private InvestmentsDevelopmentService $investmentsDevelopmentService;
+    private InvestmentsService $investmentsService;
+    private ILogger $logger;
 
 
-    public function __construct(ILogger $logger, InvestmentsService $investmentsService)
+    public function __construct(ILogger $logger, InvestmentsDevelopmentService $investmentsDevelopmentService, InvestmentsService $investmentsService)
     {
+        $this->investmentsDevelopmentService = $investmentsDevelopmentService;
         $this->investmentsService = $investmentsService;
         $this->logger = $logger;
     }
@@ -57,7 +60,7 @@ class InvestmentsDevelopmentUpdate
             throw new \Exception("Fehler beim Abfragen.");
         }
 
-        $this->investmentsService->addInvestmentDevelopment(
+        $this->investmentsDevelopmentService->addInvestmentDevelopment(
             $totalCurrentPrice,
             $totalPurchasePrice,
             $totalReinertrag,

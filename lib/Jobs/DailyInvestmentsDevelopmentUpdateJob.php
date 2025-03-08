@@ -7,6 +7,7 @@ use OCA\Investments\AppInfo\Application;
 use OCA\Investments\Repositories\FinanzenNetRepository;
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\FinanzenService;
+use OCA\Investments\Services\InvestmentsDevelopmentService;
 use OCA\Investments\Services\InvestmentsService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
@@ -31,9 +32,10 @@ class DailyInvestmentsDevelopmentUpdateJob extends TimedJob
         $userFilesService = new UserFilesService(User::USER);
         $investmentsRepository = new InvestmentsRepository($userFilesService);
 
+        $investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository);
         $investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
 
-        $this->investmentsDevelopmentUpdate = new InvestmentsDevelopmentUpdate($logger, $investmentsService);
+        $this->investmentsDevelopmentUpdate = new InvestmentsDevelopmentUpdate($logger, $investmentsDevelopmentService, $investmentsService);
         $this->logger = $logger;
     }
 

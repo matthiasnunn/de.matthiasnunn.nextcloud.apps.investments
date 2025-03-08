@@ -27,32 +27,10 @@ class InvestmentsServiceTest
 
         $this->investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
 
-        $this->addInvestmentDevelopment();
         $this->getInvestmentsByTypeId(1);
         $this->getInvestmentsByTypeId(2);
         $this->getInvestmentsByTypeId(3);
         $this->getInvestmentsByTypeId(4);
-        $this->getInvestmentsDevelopment();
-    }
-
-
-    private function addInvestmentDevelopment(): void
-    {
-        $currentPrice = 0;
-        $purchasePrice = 0;
-        $reinertrag = 0;
-        $rendite = 0;
-        $timestamp = new \DateTime();
-        $typeId = 1;
-
-        $this->investmentsService->addInvestmentDevelopment(
-            $currentPrice,
-            $purchasePrice,
-            $reinertrag,
-            $rendite,
-            $timestamp,
-            $typeId
-        );
     }
 
 
@@ -67,14 +45,6 @@ class InvestmentsServiceTest
     private function getInvestmentsByTypeId(string $typeId)
     {
         $result = $this->investmentsService->getInvestmentsByTypeId($typeId);
-
-        print_r($result);
-    }
-
-
-    private function getInvestmentsDevelopment(): void
-    {
-        $result = $this->investmentsService->getInvestmentsDevelopment();
 
         print_r($result);
     }
