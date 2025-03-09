@@ -3,6 +3,7 @@
     <author>Matthias Nunn</author>
     <background-jobs>
         <job>OCA\Investments\Jobs\DailyInvestmentsDevelopmentUpdateJob</job>
+        <job>OCA\Investments\Jobs\HourlyInvestmentsAlarmJob</job>
     </background-jobs>
     <bugs>https://github.com/matthiasnunn/de.matthiasnunn.nextcloud.apps.investments/issues</bugs>
     <category>tools</category>

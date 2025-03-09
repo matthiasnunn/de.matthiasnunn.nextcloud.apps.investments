@@ -50,6 +50,17 @@ class InvestmentsService
     }
 
 
+    public function z(): void
+    {
+        // Von Repo holen
+        // Prüfen ob Schwellenwert erreicht
+
+        // Falls nein: return
+
+        // Falls ja: Benachrichtigen
+    }
+
+
     private function addInfos($investment): void
     {
         $investment->currentCourse = $this->finanzenService->getCurrentCourse($investment->link);
