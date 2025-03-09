@@ -50,6 +50,22 @@ class InvestmentsService
     }
 
 
+    public function z(): void
+    {
+        $this->investmentsRepository->getInvestmentsAlarms();
+
+        foreach ()
+        {
+            $this->addInfos($investment);
+
+            if (Schwellenwert erreicht)
+            {
+                Benachrichtigen
+            }
+        }
+    }
+
+
     private function addInfos($investment): void
     {
         $investment->currentCourse = $this->finanzenService->getCurrentCourse($investment->link);
