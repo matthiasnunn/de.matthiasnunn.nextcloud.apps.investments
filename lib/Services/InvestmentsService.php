@@ -4,18 +4,51 @@ namespace OCA\Investments\Services;
 
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\FinanzenService;
+use OCA\Investments\Services\MailService;
 
 
 class InvestmentsService
 {
     private FinanzenService $finanzenService;
     private InvestmentsRepository $investmentsRepository;
+    private MailService $mailService;
 
 
-    public function __construct(FinanzenService $finanzenService, InvestmentsRepository $investmentsRepository)
+    public function __construct(FinanzenService $finanzenService, InvestmentsRepository $investmentsRepository, MailService $mailService)
     {
         $this->finanzenService = $finanzenService;
         $this->investmentsRepository = $investmentsRepository;
+        $this->mailService = $mailService;
+    }
+
+
+    public function checkInvestments(): void
+    {
+        $alarms = $this->investmentsRepository->getInvestmentsAlarms();
+
+        foreach ($alarms as $alarm)
+        {
+            $currentCourse = $this->finanzenService->getCurrentCourse($alarm->link);
+
+            $to = "matthias-nunn@gmx.de";
+            $subject = "Alarm für $alarm->name";
+
+            if ($alarm->lowerThreshold !== null)
+            {
+                if ($currentCourse <= $alarm->lowerThreshold)
+                {
+                    $this->mailService->sendMail($to, $subject, "Wert unterschritten!\r\n\r\nAlarm bei $alarm->lowerThreshold\r\nWert bei $currentCourse");
+                }
+            }
+
+            if ($alarm->upperThreshold !== null)
+            {
+                if ($currentCourse >= $alarm->upperThreshold)
+                {
+                    $this->mailService->sendMail($to, $subject, "Wert überschritten!\r\n\r\nAlarm bei $alarm->upperThreshold\r\nWert bei $currentCourse");
+                }
+            }
+        }
     }
 
 

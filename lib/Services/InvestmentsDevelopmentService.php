@@ -74,7 +74,7 @@ class InvestmentsDevelopmentService
     }
 
 
-    private function updateInvestmentsDevelopment(string $type, string $typeId): void
+    private function updateInvestmentsDevelopment(string $type, int $typeId): void
     {
         $investmentIncludedModel = $this->investmentsService->getInvestmentsByTypeId($typeId)->investmentIncludedModel;
 

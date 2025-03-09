@@ -9,6 +9,7 @@ class InvestmentsDao
 {
     private const DIR = "Investments";
     private const INVESTMENT = "investment.json";
+    private const INVESTMENT_ALARM = "investment_alarm.json";
     private const INVESTMENT_TYPE = "investment_type.json";
     private const INVESTMENT_TYPE_DEVELOPMENT = "investment_type_development.json";
 
@@ -25,6 +26,12 @@ class InvestmentsDao
     public function getInvestment(): array
     {
         return $this->get(self::INVESTMENT, Investment::class);
+    }
+
+
+    public function getInvestmentAlarm(): array
+    {
+        return $this->get(self::INVESTMENT_ALARM, InvestmentAlarm::class);
     }
 
 
@@ -87,6 +94,24 @@ class Investment
         $investment->wkn = $json["wkn"];
 
         return $investment;
+    }
+}
+
+
+class InvestmentAlarm
+{
+    public int $investmentId;
+    public float|null $lowerThreshold;
+    public float|null $upperThreshold;
+
+    public static function fromFile(array $json)
+    {
+        $investmentAlarm = new InvestmentAlarm();
+        $investmentAlarm->investmentId = $json["investment_id"];
+        $investmentAlarm->lowerThreshold = $json["lower_threshold"];
+        $investmentAlarm->upperThreshold = $json["upper_threshold"];
+
+        return $investmentAlarm;
     }
 }
 

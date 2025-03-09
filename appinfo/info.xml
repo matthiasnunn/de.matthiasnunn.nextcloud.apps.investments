@@ -3,6 +3,7 @@
     <author>Matthias Nunn</author>
     <background-jobs>
         <job>OCA\Investments\Jobs\DailyInvestmentsDevelopmentUpdateJob</job>
+        <job>OCA\Investments\Jobs\HourlyInvestmentsAlarmJob</job>
     </background-jobs>
     <bugs>https://github.com/matthiasnunn/de.matthiasnunn.nextcloud.apps.investments/issues</bugs>
     <category>tools</category>
@@ -11,6 +12,8 @@
     </dependencies>
     <description><![CDATA[Investments app with
 
+- dashboard widget with change from previous day
+- investments alarm with email notification
 - investments development update job
 - site with investments development data
 - site with investments data
@@ -28,5 +31,5 @@
     </navigations>
     <repository>https://github.com/matthiasnunn/de.matthiasnunn.nextcloud.apps.investments</repository>
     <summary>Investments app</summary>
-    <version>1.1.0</version>
+    <version>1.2.0</version>
 </info>

@@ -41,6 +41,35 @@ class InvestmentsRepository
     }
 
 
+    public function getInvestmentsAlarms(): array
+    {
+        $alarms = $this->investmentsDao->getInvestmentAlarm();
+
+        if(empty($alarms))
+        {
+            return [];
+        }
+
+        $investments = $this->investmentsDao->getInvestment();
+
+        $investmentsAlarms = [];
+
+        foreach ($alarms as $alarm)
+        {
+            $investment = $this->findInvestmentById($investments, $alarm->investmentId);
+
+            if ($investment === null)
+            {
+                continue;
+            }
+
+            $investmentsAlarms[] = InvestmentAlarm::fromDao($investment, $alarm);
+        }
+
+        return $investmentsAlarms;
+    }
+
+
     public function getInvestmentsByTypeId(int $typeId): Type
     {
         $daoInvestments = $this->investmentsDao->getInvestment();
@@ -99,6 +128,43 @@ class InvestmentsRepository
         }
 
         return $investmentsDevelopment;
+    }
+
+
+    /**
+     * Findet ein Investment anhand seiner ID
+     *
+     * @param array $investments Liste der Investments
+     * @param int|string $investmentId ID des gesuchten Investments
+     * @return object|null Das gefundene Investment oder null
+     */
+    private function findInvestmentById(array $investments, $investmentId)
+    {
+        $filtered = array_filter($investments, function($investment) use ($investmentId) {
+            return $investment->id === $investmentId;
+        });
+
+        return array_values($filtered)[0] ?? null;
+    }
+}
+
+
+class InvestmentAlarm
+{
+    public string $link;
+    public float|null $lowerThreshold;
+    public float|null $upperThreshold;
+    public string $name;
+
+    public static function fromDao($investment, $investmentAlarmDao)
+    {
+        $investmentAlarm = new InvestmentAlarm();
+        $investmentAlarm->link = $investment->linkFinanzenNet;
+        $investmentAlarm->lowerThreshold = $investmentAlarmDao->lowerThreshold;
+        $investmentAlarm->upperThreshold = $investmentAlarmDao->upperThreshold;
+        $investmentAlarm->name = $investment->name;
+
+        return $investmentAlarm;
     }
 }
 
