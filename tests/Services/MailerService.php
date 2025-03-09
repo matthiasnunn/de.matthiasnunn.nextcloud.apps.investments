@@ -1,0 +1,1 @@
+$mailer = \OC::$server->get(IMailer::class);
