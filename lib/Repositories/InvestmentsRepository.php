@@ -41,6 +41,15 @@ class InvestmentsRepository
     }
 
 
+    public function getInvestmentsAlarms()
+    {
+        $this->investmentsDao->
+        // Alarme holen
+        // Investments holen
+        // neues ding aus den beiden bauen
+    }
+
+
     public function getInvestmentsByTypeId(int $typeId): Type
     {
         $daoInvestments = $this->investmentsDao->getInvestment();
