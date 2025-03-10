@@ -4,10 +4,14 @@ namespace OCA\Investments\Tests\Services;
 
 require_once "/var/www/html/lib/base.php";
 
+use OCA\Investments\Repositories\FinanzenNetRepository;
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
+use OCA\Investments\Services\InvestmentsService;
+use OCA\Investments\Services\FinanzenService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
+use OCP\ILogger;
 
 
 class InvestmentsDevelopmentServiceTest
@@ -17,34 +21,21 @@ class InvestmentsDevelopmentServiceTest
 
     public function __construct()
     {
+        $finanzenRepository = new FinanzenNetRepository();
+        $finanzenService = new FinanzenService($finanzenRepository);
+
         $userFilesService = new UserFilesService(User::ADMIN);
         $investmentsRepository = new InvestmentsRepository($userFilesService);
 
-        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository);
+        $investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
 
-        $this->addInvestmentDevelopment();
+        $logger = \OC::$server->get(ILogger::class);
+
+        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository, $investmentsService, $logger);
+
         $this->getInvestmentsDevelopment();
         $this->getInvestmentsTrends();
-    }
-
-
-    private function addInvestmentDevelopment(): void
-    {
-        $currentPrice = 0;
-        $purchasePrice = 0;
-        $reinertrag = 0;
-        $rendite = 0;
-        $timestamp = new \DateTime();
-        $typeId = 1;
-
-        $this->investmentsDevelopmentService->addInvestmentDevelopment(
-            $currentPrice,
-            $purchasePrice,
-            $reinertrag,
-            $rendite,
-            $timestamp,
-            $typeId
-        );
+        $this->updateInvestmentsDevelopments();
     }
 
 
@@ -61,6 +52,12 @@ class InvestmentsDevelopmentServiceTest
         $result = $this->investmentsDevelopmentService->getInvestmentsTrends();
 
         print_r($result);
+    }
+
+
+    private function updateInvestmentsDevelopments(): void
+    {
+        $this->investmentsDevelopmentService->updateInvestmentsDevelopments();
     }
 }
 

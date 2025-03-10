@@ -2,23 +2,24 @@
 
 namespace OCA\Investments\Services;
 
+use OCA\Investments\AppInfo\Application;
 use OCA\Investments\Repositories\InvestmentsRepository;
+use OCA\Investments\Services\InvestmentsService;
+use OCP\ILogger;
 
 
 class InvestmentsDevelopmentService
 {
     private InvestmentsRepository $investmentsRepository;
+    private InvestmentsService $investmentsService;
+    private ILogger $logger;
 
 
-    public function __construct(InvestmentsRepository $investmentsRepository)
+    public function __construct(InvestmentsRepository $investmentsRepository, InvestmentsService $investmentsService, ILogger $logger)
     {
         $this->investmentsRepository = $investmentsRepository;
-    }
-
-
-    public function addInvestmentDevelopment(float $currentPrice, float $purchasePrice, float $reinertrag, float $rendite, \DateTime $timestamp, int $typeId): void
-    {
-        $this->investmentsRepository->addInvestmentDevelopment($currentPrice, $purchasePrice, $reinertrag, $rendite, $timestamp, $typeId);
+        $this->investmentsService = $investmentsService;
+        $this->logger = $logger;
     }
 
 
@@ -54,6 +55,56 @@ class InvestmentsDevelopmentService
         }
 
         return $investmentsTrends;
+    }
+
+
+    public function updateInvestmentsDevelopments(): void
+    {
+        $types = [
+            "Aktie" => 3,
+            "Devise" => 2,
+            "ETF" => 4,
+            "Rohstoff" => 1
+        ];
+
+        foreach ($types as $type => $typeId)
+        {
+            $this->updateInvestmentsDevelopment($type, $typeId);
+        }
+    }
+
+
+    private function updateInvestmentsDevelopment(string $type, string $typeId): void
+    {
+        $investmentIncludedModel = $this->investmentsService->getInvestmentsByTypeId($typeId)->investmentIncludedModel;
+
+        $totalCurrentPrice = $investmentIncludedModel->totalCurrentPrice;
+        $totalPurchasePrice = $investmentIncludedModel->totalPurchasePrice;
+        $totalReinertrag = $investmentIncludedModel->totalReinertrag;
+        $totalRendite = $investmentIncludedModel->totalRendite;
+        $timestamp = $investmentIncludedModel->timestamp;
+
+        if ($totalCurrentPrice === 0)
+        {
+            $this->logger->error("Fehler beim Aktualisieren der Investmentsentwicklung bei $type: Fehler beim Abfragen.", ["app" => Application::APP_ID]);
+
+            NotificationService::createNotification(User::USER, "Fehler beim Aktualisieren der Investmentsentwicklung bei $type: Fehler beim Abfragen.");
+
+            throw new \Exception("Fehler beim Abfragen.");
+        }
+
+        $this->investmentsRepository->addInvestmentDevelopment(
+            $totalCurrentPrice,
+            $totalPurchasePrice,
+            $totalReinertrag,
+            $totalRendite,
+            $timestamp,
+            $typeId
+        );
+
+        $timestampFormatted = $timestamp->format("d.m.Y");
+
+        $this->logger->info("Investment $type vom $timestampFormatted angelegt: $totalCurrentPrice, $totalPurchasePrice, $totalReinertrag und $totalRendite", ["app" => Application::APP_ID]);
     }
 }
 

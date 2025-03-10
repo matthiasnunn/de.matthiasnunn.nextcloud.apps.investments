@@ -3,8 +3,11 @@
 namespace OCA\Investments\Widgets;
 
 use OCA\Investments\AppInfo\Application;
+use OCA\Investments\Repositories\FinanzenNetRepository;
 use OCA\Investments\Repositories\InvestmentsRepository;
+use OCA\Investments\Services\FinanzenService;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
+use OCA\Investments\Services\InvestmentsService;
 use OCA\Investments\Services\InvestmentTrend;
 use OCA\Investments\Utils\Formatter;
 use OCA\Investments\Utils\ImgLoader;
@@ -12,6 +15,7 @@ use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
 use OCP\IInitialStateService;
 use OCP\IL10N;
+use OCP\ILogger;
 use OCP\IURLGenerator;
 use OCP\Util;
 use OCP\Dashboard\IAPIWidgetV2;
@@ -28,15 +32,19 @@ class InvestmentsDevelopmentWidget implements IAPIWidgetV2, IIconWidget, IWidget
     private InvestmentsDevelopmentService $investmentsDevelopmentService;
     private IURLGenerator $urlGenerator;
 
-    public function __construct(IInitialStateService $initialStateService, IL10N $l10n, IURLGenerator $urlGenerator)
+    public function __construct(IInitialStateService $initialStateService, IL10N $l10n, ILogger $logger, IURLGenerator $urlGenerator)
     {
-        $userFilesService = new UserFilesService(User::USER);
+        $finanzenRepository = new FinanzenNetRepository();
+        $finanzenService = new FinanzenService($finanzenRepository);
 
+        $userFilesService = new UserFilesService(User::USER);
         $investmentsRepository = new InvestmentsRepository($userFilesService);
+
+        $investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
 
         $this->initialStateService = $initialStateService;
         $this->l10n = $l10n;
-        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository);
+        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository, $investmentsService, $logger);
         $this->urlGenerator = $urlGenerator;
     }
 
