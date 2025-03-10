@@ -3,14 +3,8 @@
 namespace OCA\Investments\Controller;
 
 use OCA\Investments\AppInfo\Application;
-use OCA\Investments\Repositories\FinanzenNetRepository;
-use OCA\Investments\Repositories\InvestmentsRepository;
-use OCA\Investments\Services\FinanzenService;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
 use OCA\Investments\Services\InvestmentsService;
-use OCA\Shared\AppInfo\User;
-use OCA\Shared\Services\UserFilesService;
-use OCP\ILogger;
 use OCP\IRequest;
 use OCP\IURLGenerator;
 use OCP\AppFramework\Controller;
@@ -27,19 +21,11 @@ class MainController extends Controller
     private $urlGenerator;
 
 
-    public function __construct($AppName, ILogger $logger, IRequest $request, IURLGenerator $urlGenerator)
+    public function __construct($AppName, InvestmentsDevelopmentService $investmentsDevelopmentService, InvestmentsService $investmentsService, IRequest $request, IURLGenerator $urlGenerator)
     {
         parent::__construct($AppName, $request);
 
-        $finanzenRepository = new FinanzenNetRepository();
-        $finanzenService = new FinanzenService($finanzenRepository);
-
-        $userFilesService = new UserFilesService(User::USER);
-        $investmentsRepository = new InvestmentsRepository($userFilesService);
-
-        $investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
-
-        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository, $investmentsService, $logger);
+        $this->investmentsDevelopmentService = $investmentsDevelopmentService;
         $this->investmentsService = $investmentsService;
         $this->urlGenerator = $urlGenerator;
     }

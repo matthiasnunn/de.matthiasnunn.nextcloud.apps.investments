@@ -3,13 +3,7 @@
 namespace OCA\Investments\Jobs;
 
 use OCA\Investments\AppInfo\Application;
-use OCA\Investments\Repositories\FinanzenNetRepository;
-use OCA\Investments\Repositories\InvestmentsRepository;
-use OCA\Investments\Services\FinanzenService;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
-use OCA\Investments\Services\InvestmentsService;
-use OCA\Shared\AppInfo\User;
-use OCA\Shared\Services\UserFilesService;
 use OCP\ILogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
@@ -21,19 +15,11 @@ class DailyInvestmentsDevelopmentUpdateJob extends TimedJob
     private ILogger $logger;
 
 
-    public function __construct(ILogger $logger, ITimeFactory $time)
+    public function __construct(InvestmentsDevelopmentService $investmentsDevelopmentService, ILogger $logger, ITimeFactory $time)
     {
         parent::__construct($time);
 
-        $finanzenRepository = new FinanzenNetRepository();
-        $finanzenService = new FinanzenService($finanzenRepository);
-
-        $userFilesService = new UserFilesService(User::USER);
-        $investmentsRepository = new InvestmentsRepository($userFilesService);
-
-        $investmentsService = new InvestmentsService($finanzenService, $investmentsRepository);
-
-        $this->investmentsDevelopmentService = new InvestmentsDevelopmentService($investmentsRepository, $investmentsService, $logger);
+        $this->investmentsDevelopmentService = $investmentsDevelopmentService;
         $this->logger = $logger;
     }
 
