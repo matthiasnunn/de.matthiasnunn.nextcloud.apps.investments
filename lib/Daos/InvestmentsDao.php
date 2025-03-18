@@ -151,7 +151,6 @@ class InvestmentPurchaseFee
     {
         $investmentPurchaseFee = new InvestmentPurchaseFee();
         $investmentPurchaseFee->fee = $json["fee"];
-        $investmentPurchaseFee->id = $json["id"];
         $investmentPurchaseFee->name = $json["name"];
 
         return $investmentPurchaseFee;
