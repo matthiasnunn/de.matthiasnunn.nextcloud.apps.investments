@@ -4,18 +4,18 @@ namespace OCA\Investments\Jobs;
 
 use OCA\Investments\AppInfo\Application;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
-use OCP\ILogger;
 use OCP\AppFramework\Utility\ITimeFactory;
 use OCP\BackgroundJob\TimedJob;
+use Psr\Log\LoggerInterface;
 
 
 class DailyInvestmentsDevelopmentUpdateJob extends TimedJob
 {
     private InvestmentsDevelopmentService $investmentsDevelopmentService;
-    private ILogger $logger;
+    private LoggerInterface $logger;
 
 
-    public function __construct(InvestmentsDevelopmentService $investmentsDevelopmentService, ILogger $logger, ITimeFactory $time)
+    public function __construct(InvestmentsDevelopmentService $investmentsDevelopmentService, LoggerInterface $logger, ITimeFactory $time)
     {
         parent::__construct($time);
 

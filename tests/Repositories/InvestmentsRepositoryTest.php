@@ -16,7 +16,9 @@ class InvestmentsRepositoryTest
 
     public function __construct()
     {
-        $this->investmentsRepository = new InvestmentsRepository(new UserFilesService(User::ADMIN));
+        $userFilesService = new UserFilesService(\OC::$server->getLogger(), User::ADMIN);
+
+        $this->investmentsRepository = new InvestmentsRepository($userFilesService);
 
         $this->getInvestmentsByTypeId(1);
         $this->getInvestmentsByTypeId(2);

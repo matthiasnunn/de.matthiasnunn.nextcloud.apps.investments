@@ -12,7 +12,6 @@ use OCA\Investments\Services\InvestmentsService;
 use OCA\Investments\Services\MailService;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
-use OCP\ILogger;
 use OCP\Mail\IMailer;
 
 
@@ -26,10 +25,11 @@ class InvestmentsDevelopmentServiceTest
         $finanzenRepository = new FinanzenNetRepository();
         $finanzenService = new FinanzenService($finanzenRepository);
 
-        $userFilesService = new UserFilesService(User::ADMIN);
+        $logger = \OC::$server->getLogger();
+
+        $userFilesService = new UserFilesService($logger, User::ADMIN);
         $investmentsRepository = new InvestmentsRepository($userFilesService);
 
-        $logger = \OC::$server->get(ILogger::class);
         $mailer = \OC::$server->get(IMailer::class);
         $mailService = new MailService($logger, $mailer);
 

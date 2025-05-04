@@ -11,12 +11,12 @@ use OCA\Investments\Services\MailService;
 use OCA\Investments\Widgets\InvestmentsDevelopmentWidget;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
-use OCP\ILogger;
 use OCP\AppFramework\App;
 use OCP\AppFramework\Bootstrap\IBootContext;
 use OCP\AppFramework\Bootstrap\IBootstrap;
 use OCP\AppFramework\Bootstrap\IRegistrationContext;
 use OCP\Mail\IMailer;
+use Psr\Log\LoggerInterface;
 
 
 class Application extends App implements IBootstrap
@@ -46,20 +46,24 @@ class Application extends App implements IBootstrap
             $finanzenRepository = new FinanzenNetRepository();
             $finanzenService = new FinanzenService($finanzenRepository);
 
-            $userFilesService = new UserFilesService(User::USER);
+            $logger = $c->get(LoggerInterface::class);
+
+            $userFilesService = new UserFilesService($logger, User::USER);
             $investmentsRepository = new InvestmentsRepository($userFilesService);
 
-            $mailService = new MailService($c->get(ILogger::class), $c->get(IMailer::class));
+            $mailService = new MailService($logger, $c->get(IMailer::class));
 
             return new InvestmentsService($finanzenService, $investmentsRepository, $mailService);
         });
 
         $context->registerService(InvestmentsDevelopmentService::class, function($c)
         {
-            $userFilesService = new UserFilesService(User::USER);
+            $logger = $c->get(LoggerInterface::class);
+
+            $userFilesService = new UserFilesService($logger, User::USER);
             $investmentsRepository = new InvestmentsRepository($userFilesService);
 
-            return new InvestmentsDevelopmentService($investmentsRepository, $c->get(InvestmentsService::class), $c->get(ILogger::class));
+            return new InvestmentsDevelopmentService($investmentsRepository, $c->get(InvestmentsService::class), $logger);
         });
     }
 }

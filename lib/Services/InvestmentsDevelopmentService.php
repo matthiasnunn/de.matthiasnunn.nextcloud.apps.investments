@@ -5,17 +5,17 @@ namespace OCA\Investments\Services;
 use OCA\Investments\AppInfo\Application;
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\InvestmentsService;
-use OCP\ILogger;
+use Psr\Log\LoggerInterface;
 
 
 class InvestmentsDevelopmentService
 {
     private InvestmentsRepository $investmentsRepository;
     private InvestmentsService $investmentsService;
-    private ILogger $logger;
+    private LoggerInterface $logger;
 
 
-    public function __construct(InvestmentsRepository $investmentsRepository, InvestmentsService $investmentsService, ILogger $logger)
+    public function __construct(InvestmentsRepository $investmentsRepository, InvestmentsService $investmentsService, LoggerInterface $logger)
     {
         $this->investmentsRepository = $investmentsRepository;
         $this->investmentsService = $investmentsService;
@@ -88,7 +88,8 @@ class InvestmentsDevelopmentService
         {
             $this->logger->error("Fehler beim Aktualisieren der Investmentsentwicklung bei $type: Fehler beim Abfragen.", ["app" => Application::APP_ID]);
 
-            NotificationService::createNotification(User::USER, "Fehler beim Aktualisieren der Investmentsentwicklung bei $type: Fehler beim Abfragen.");
+            $notificationService = new NotificationService($this->logger);
+            $notificationService->createNotification(User::USER, "Fehler beim Aktualisieren der Investmentsentwicklung bei $type: Fehler beim Abfragen.");
 
             throw new \Exception("Fehler beim Abfragen.");
         }
