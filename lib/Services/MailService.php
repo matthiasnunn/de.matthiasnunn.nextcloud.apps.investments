@@ -2,16 +2,16 @@
 
 namespace OCA\Investments\Services;
 
-use OCP\ILogger;
 use OCP\Mail\IMailer;
+use Psr\Log\LoggerInterface;
 
 
 class MailService
 {
-    private ILogger $logger;
+    private LoggerInterface $logger;
     private IMailer $mailer;
 
-    public function __construct(ILogger $logger, IMailer $mailer)
+    public function __construct(LoggerInterface $logger, IMailer $mailer)
     {
         $this->logger = $logger;
         $this->mailer = $mailer;

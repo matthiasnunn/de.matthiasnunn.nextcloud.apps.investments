@@ -7,6 +7,7 @@ require_once "/var/www/html/lib/base.php";
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Shared\AppInfo\User;
 use OCA\Shared\Services\UserFilesService;
+use Psr\Log\LoggerInterface;
 
 
 class InvestmentsRepositoryTest
@@ -16,7 +17,9 @@ class InvestmentsRepositoryTest
 
     public function __construct()
     {
-        $this->investmentsRepository = new InvestmentsRepository(new UserFilesService(User::ADMIN));
+        $userFilesService = new UserFilesService(\OC::$server->get(LoggerInterface::class), User::ADMIN);
+
+        $this->investmentsRepository = new InvestmentsRepository($userFilesService);
 
         $this->getInvestmentsByTypeId(1);
         $this->getInvestmentsByTypeId(2);

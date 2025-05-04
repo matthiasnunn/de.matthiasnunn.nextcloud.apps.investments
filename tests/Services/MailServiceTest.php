@@ -5,8 +5,8 @@ namespace OCA\Investments\Tests\Services;
 require_once "/var/www/html/lib/base.php";
 
 use OCA\Investments\Services\MailService;
-use OCP\ILogger;
 use OCP\Mail\IMailer;
+use Psr\Log\LoggerInterface;
 
 
 class MailServiceTest
@@ -16,7 +16,7 @@ class MailServiceTest
 
     public function __construct()
     {
-        $this->mailService = new MailService(\OC::$server->get(ILogger::class), \OC::$server->get(IMailer::class));
+        $this->mailService = new MailService(\OC::$server->get(LoggerInterface::class), \OC::$server->get(IMailer::class));
 
         $this->sendMail();
     }
