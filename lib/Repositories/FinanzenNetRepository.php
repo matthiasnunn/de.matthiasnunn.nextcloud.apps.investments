@@ -31,7 +31,7 @@ class FinanzenNetRepository implements IFinanzenRepository
 
         $elements = $xpath->query('//span[span[@class="snapshot__value-unit" and text()="EUR"]]/span[@class="snapshot__value"]');
 
-        if (empty($elements))
+        if ($elements->length === 0)
         {
             throw new \Exception("Kein Preis gefunden in der Antwort von finanzen.net");
         }
