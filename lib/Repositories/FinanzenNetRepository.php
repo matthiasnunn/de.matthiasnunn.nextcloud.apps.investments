@@ -11,8 +11,11 @@ class FinanzenNetRepository implements IFinanzenRepository
     {
         $curl = curl_init();
 
-        curl_setopt($curl, CURLOPT_URL, $link);
+        curl_setopt($curl, CURLOPT_ENCODING, "");
+        curl_setopt($curl, CURLOPT_HTTPHEADER, [ "Accept-Language: de-DE,de" ]);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);  // Antwort wird zurückgegeben statt ausgegeben
+        curl_setopt($curl, CURLOPT_URL, $link);
+        curl_setopt($curl, CURLOPT_USERAGENT, "PostmanRuntime/7.44.0");
 
         $responseBody = curl_exec($curl);
 
