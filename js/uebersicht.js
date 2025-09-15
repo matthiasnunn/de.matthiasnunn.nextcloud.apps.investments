@@ -64,17 +64,17 @@ var totalPrice = aktien.totalCurrentPrice + etfs.totalCurrentPrice + rohstoffe.t
 new Chart(chartInvestmentRatio, {
   data: {
     labels: [
-      "Aktien",
-      "ETFs",
-      "Rohstoffe",
-      "Devisen"
+      "Rohstoff",
+      "Devise",
+      "Aktie",
+      "ETF"
     ],
     datasets: [{
       data: [
-        aktien.totalCurrentPrice / totalPrice * 100,
-        etfs.totalCurrentPrice / totalPrice * 100,
         rohstoffe.totalCurrentPrice / totalPrice * 100,
-        devisen.totalCurrentPrice / totalPrice * 100
+        devisen.totalCurrentPrice / totalPrice * 100,
+        aktien.totalCurrentPrice / totalPrice * 100,
+        etfs.totalCurrentPrice / totalPrice * 100
       ]
     }]
   },
