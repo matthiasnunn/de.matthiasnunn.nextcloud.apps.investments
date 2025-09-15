@@ -18,7 +18,6 @@ new Chart(chartRendite, {
     labels: investmentsDevelopmentModel[0].items.map(investmentsDevelopmentItemModel => investmentsDevelopmentItemModel.formattedDate),
     datasets: investmentsDevelopmentModel.map(investmentsDevelopmentModel => ({
       data: investmentsDevelopmentModel.items.map(investmentsDevelopmentItemModel => investmentsDevelopmentItemModel.rendite),
-      hidden: investmentsDevelopmentModel.name === "Devise",
       label: investmentsDevelopmentModel.name,
       pointRadius: 4
     }))
@@ -42,7 +41,6 @@ new Chart(chartCurrentPrice, {
     labels: investmentsDevelopmentModel[0].items.map(investmentsDevelopmentItemModel => investmentsDevelopmentItemModel.formattedDate),
     datasets: investmentsDevelopmentModel.map(investmentsDevelopmentModel => ({
       data: investmentsDevelopmentModel.items.map(investmentsDevelopmentItemModel => investmentsDevelopmentItemModel.currentPrice),
-      hidden: investmentsDevelopmentModel.name === "Devise",
       label: investmentsDevelopmentModel.name,
       pointRadius: 4
     }))
