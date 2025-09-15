@@ -23,11 +23,21 @@ new Chart(chartRendite, {
     }))
   },
   options: {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return (context.parsed.y / 100).toLocaleString("de-DE", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          }
+        },
+        displayColors: false
+      }
+    },
     scales: {
       y: {
         ticks: {
           callback: function(value) {
-            return value + " %";
+            return `${value} %`;
           }
         }
       }
@@ -46,11 +56,21 @@ new Chart(chartCurrentPrice, {
     }))
   },
   options: {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return context.parsed.y.toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+          }
+        },
+        displayColors: false
+      }
+    },
     scales: {
       y: {
         ticks: {
           callback: function(value) {
-            return value + " €";
+            return value.toLocaleString("de-DE", { style: "currency", currency: "EUR", minimumFractionDigits: 0, maximumFractionDigits: 0 });
           }
         }
       }
@@ -63,12 +83,6 @@ var totalPrice = aktien.totalCurrentPrice + etfs.totalCurrentPrice + rohstoffe.t
 
 new Chart(chartInvestmentRatio, {
   data: {
-    labels: [
-      "Rohstoff",
-      "Devise",
-      "Aktie",
-      "ETF"
-    ],
     datasets: [{
       data: [
         rohstoffe.totalCurrentPrice / totalPrice * 100,
@@ -76,7 +90,25 @@ new Chart(chartInvestmentRatio, {
         aktien.totalCurrentPrice / totalPrice * 100,
         etfs.totalCurrentPrice / totalPrice * 100
       ]
-    }]
+    }],
+    labels: [
+      "Rohstoff",
+      "Devise",
+      "Aktie",
+      "ETF"
+    ]
+  },
+  options: {
+    plugins: {
+      tooltip: {
+        callbacks: {
+          label: function(context) {
+            return (context.parsed / 100).toLocaleString("de-DE", { style: "percent", minimumFractionDigits: 2, maximumFractionDigits: 2 });
+          }
+        },
+        displayColors: false
+      }
+    }
   },
   type: "pie"
 });
