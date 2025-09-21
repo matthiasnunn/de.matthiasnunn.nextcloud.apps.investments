@@ -51,7 +51,10 @@ investments.forEach(function(investment) {
             "purchaseCourse": purchase.purchaseCourse,
             "currentCourse": investment.currentCourse,
             "currentPrice": purchase.currentPrice,
-            "rendite": purchase.rendite
+            "rendite": {
+                "dividends": investment.dividends,
+                "rendite": purchase.rendite
+            }
         });
     });
 });
@@ -145,9 +148,10 @@ new DataTable(".table", {
             data: "rendite",
             render: function(data) {
                 var className = "";
-                if (data > 0) className = "color-green";
-                else if (data < 0) className = "color-red";
-                return `<span class="${className}">${data.toRenditeString()} %</span>`;
+                if (data.rendite > 0) className = "color-green";
+                else if (data.rendite < 0) className = "color-red";
+                var tooltip = (data.dividends ?? []).reduce((acc, val) => acc + val, 0).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+                return `<span title="${tooltip}" class="${className}">${data.rendite.toRenditeString()} %</span>`;
             },
             title: "Rendite"
         }

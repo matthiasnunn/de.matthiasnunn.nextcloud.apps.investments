@@ -213,6 +213,7 @@ class Type
 
 class Investment
 {
+    public array|null $dividends;
     public string $link;
     public string $name;
     public array $purchases;
@@ -220,6 +221,7 @@ class Investment
     public static function fromDao(DAOInvestment $daoInvestment)
     {
         $investment = new Investment();
+        $investment->dividends = $daoInvestment->dividends;
         $investment->link = $daoInvestment->linkFinanzenNet;
         $investment->name = $daoInvestment->name;
         $investment->purchases = array_map([Purchase::class, "fromDao"], $daoInvestment->purchases);

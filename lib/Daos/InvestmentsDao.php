@@ -68,6 +68,7 @@ class InvestmentsDao
 
 class Investment
 {
+    public array|null $dividends;
     public int $id;
     public string|null $isin;
     public string $linkFinanzen100De;
@@ -82,6 +83,7 @@ class Investment
     public static function fromFile(array $json)
     {
         $investment = new Investment();
+        $investment->dividends = $json["dividends"];
         $investment->id = $json["id"];
         $investment->isin = $json["isin"];
         $investment->linkFinanzen100De = $json["link_finanzen100_de"];
