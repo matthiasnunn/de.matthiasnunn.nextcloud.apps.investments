@@ -8,7 +8,7 @@
     <bugs>https://github.com/matthiasnunn/de.matthiasnunn.nextcloud.apps.investments/issues</bugs>
     <category>tools</category>
     <dependencies>
-        <nextcloud min-version="30" max-version="31" />
+        <nextcloud min-version="30" max-version="34" />
     </dependencies>
     <description><![CDATA[Investments app with
 
