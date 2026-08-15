@@ -3,10 +3,10 @@
 namespace OCA\Investments\Widgets;
 
 use OCA\Investments\AppInfo\Application;
+use OCA\Investments\Providers\IconUrlProvider;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
 use OCA\Investments\Services\InvestmentTrend;
 use OCA\Investments\Utils\Formatter;
-use OCA\Investments\Utils\ImgLoader;
 use OCP\IInitialStateService;
 use OCP\IL10N;
 use OCP\IURLGenerator;
@@ -20,13 +20,15 @@ use OCP\Dashboard\Model\WidgetItems;
 
 class InvestmentsDevelopmentWidget implements IAPIWidgetV2, IIconWidget, IWidget
 {
+    private IconUrlProvider $iconUrlProvider;
     private IInitialStateService $initialStateService;
     private InvestmentsDevelopmentService $investmentsDevelopmentService;
     private IL10N $l10n;
     private IURLGenerator $urlGenerator;
 
-    public function __construct(IInitialStateService $initialStateService, InvestmentsDevelopmentService $investmentsDevelopmentService, IL10N $l10n, IURLGenerator $urlGenerator)
+    public function __construct(IconUrlProvider $iconUrlProvider, IInitialStateService $initialStateService, InvestmentsDevelopmentService $investmentsDevelopmentService, IL10N $l10n, IURLGenerator $urlGenerator)
     {
+        $this->iconUrlProvider = $iconUrlProvider;
         $this->initialStateService = $initialStateService;
         $this->investmentsDevelopmentService = $investmentsDevelopmentService;
         $this->l10n = $l10n;
@@ -48,7 +50,7 @@ class InvestmentsDevelopmentWidget implements IAPIWidgetV2, IIconWidget, IWidget
      */
     public function getIconUrl(): string
     {
-        return ImgLoader::getChartLineSolidBlackPath();
+        return $this->iconUrlProvider->getChartLineSolidBlackPath();
     }
 
     /**
@@ -114,17 +116,17 @@ class InvestmentsDevelopmentWidget implements IAPIWidgetV2, IIconWidget, IWidget
     {
         if ($rendite <= -0.2)
         {
-            return ImgLoader::getRightLongSolidNegativePath();
+            return $this->iconUrlProvider->getRightLongSolidNegativePath();
         }
 
         if ($rendite > -0.2 && $rendite < 0.2)
         {
-            return ImgLoader::getRightLongSolidNeutralPath();
+            return $this->iconUrlProvider->getRightLongSolidNeutralPath();
         }
 
         if ($rendite >= 0.2)
         {
-            return ImgLoader::getRightLongSolidPositivePath();
+            return $this->iconUrlProvider->getRightLongSolidPositivePath();
         }
     }
 
