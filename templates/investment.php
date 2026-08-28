@@ -1,9 +1,9 @@
 <?php
 
-    script("investments", "lib/dataTables.min");  // `js/lib/dataTables.min.js` einbinden
+    script("investments", "lib/datatables.min");  // `js/lib/datatables.min.js` einbinden
     script("investments", "investment");          // `js/investment.js` einbinden
 
-    style("investments", "lib/dataTables.min");   // `css/lib/dataTables.min.js` einbinden
+    style("investments", "lib/datatables.min");   // `css/lib/datatables.min.js` einbinden
     style("shared", "style");                     // `css/style.css` einbinden
 
 ?>
