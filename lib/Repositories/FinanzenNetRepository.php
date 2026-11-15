@@ -32,14 +32,14 @@ class FinanzenNetRepository implements IFinanzenRepository
 
         $xpath = new \DOMXPath($doc);
 
-        $elements = $xpath->query('//span[span[@class="snapshot__value-unit" and text()="EUR"]]/span[@class="snapshot__value"]');
+        $elements = $xpath->query('//span[contains(@class,"snapshot__value-current")][span[@class="snapshot__value-unit"][normalize-space()="EUR"]]/span[@class="snapshot__value"]');
 
         if ($elements->length === 0)
         {
             throw new \Exception("Kein Preis gefunden in der Antwort von finanzen.net");
         }
 
-        $betrag = str_replace([".", ","], ["", "."], $elements[0]->nodeValue);
+        $betrag = str_replace([".", ","], ["", "."], $elements->item(0)->textContent);
 
         return (float) $betrag;
     }
