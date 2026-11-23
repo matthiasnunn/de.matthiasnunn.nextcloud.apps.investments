@@ -3,28 +3,25 @@
 namespace OCA\Investments\Repositories;
 
 use OCA\Investments\Repositories\IFinanzenRepository;
+use OCP\Http\Client\IClientService;
 
 
 class FinanzenNetRepository implements IFinanzenRepository
 {
+    private IClientService $clientService;
+
+    public function __construct(IClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
+
     public function parse(string $link): float
     {
-        $curl = curl_init();
+        $client = $this->clientService->newClient();
 
-        curl_setopt($curl, CURLOPT_ENCODING, "");
-        curl_setopt($curl, CURLOPT_HTTPHEADER, [ "Accept-Language: de-DE,de" ]);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);  // Antwort wird zurückgegeben statt ausgegeben
-        curl_setopt($curl, CURLOPT_URL, $link);
-        curl_setopt($curl, CURLOPT_USERAGENT, "PostmanRuntime/7.44.0");
+        $response = $client->get($link);
 
-        $responseBody = curl_exec($curl);
-
-        curl_close($curl);
-
-        if (curl_errno($curl))
-        {
-            throw new \Exception("Fehler beim Abrufen der URL: " . $link);
-        }
+        $responseBody = $response->getBody();
 
         $doc = new \DOMDocument();
 

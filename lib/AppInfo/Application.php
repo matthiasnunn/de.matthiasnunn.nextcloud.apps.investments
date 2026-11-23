@@ -41,9 +41,15 @@ class Application extends App implements IBootstrap
     {
         $context->registerDashboardWidget(InvestmentsDevelopmentWidget::class);
 
+        $context->registerService(IFinanzenRepository::class, function($c)
+        {
+            return $c->get(FinanzenNetRepository::class);
+        });
+
         $context->registerService(InvestmentsService::class, function($c)
         {
-            $finanzenRepository = new FinanzenNetRepository();
+            $finanzenRepository = $c->get(IFinanzenRepository::class);
+
             $finanzenService = new FinanzenService($finanzenRepository);
 
             $logger = $c->get(LoggerInterface::class);

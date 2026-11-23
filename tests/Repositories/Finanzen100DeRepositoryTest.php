@@ -5,6 +5,7 @@ namespace OCA\Investments\Tests\Repositories;
 require_once "/var/www/html/lib/base.php";
 
 use OCA\Investments\Repositories\Finanzen100DeRepository;
+use OCP\Http\Client\IClientService;
 
 
 class Finanzen100DeRepositoryTest
@@ -13,7 +14,9 @@ class Finanzen100DeRepositoryTest
 
     public function __construct()
     {
-        $this->finanzen100DeRepository = new Finanzen100DeRepository();
+        $clientService = \OC::$server->get(IClientService::class);
+
+        $this->finanzen100DeRepository = new Finanzen100DeRepository($clientService);
 
         $this->parse("https://www.finanzen100.de/aktien/apple-wkn-865985_H1526430491_86627/");
         $this->parse("https://www.finanzen100.de/waehrungen/ethereum-eth-eur_H1951636285_190438971/");

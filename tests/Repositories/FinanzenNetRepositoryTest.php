@@ -5,6 +5,7 @@ namespace OCA\Investments\Tests\Repositories;
 require_once "/var/www/html/lib/base.php";
 
 use OCA\Investments\Repositories\FinanzenNetRepository;
+use OCP\Http\Client\IClientService;
 
 
 class FinanzenNetRepositoryTest
@@ -13,7 +14,9 @@ class FinanzenNetRepositoryTest
 
     public function __construct()
     {
-        $this->finanzenNetRepository = new FinanzenNetRepository();
+        $clientService = \OC::$server->get(IClientService::class);
+
+        $this->finanzenNetRepository = new FinanzenNetRepository($clientService);;
 
         $this->parse("https://www.finanzen.net/aktien/apple-aktie");
         $this->parse("https://www.finanzen.net/devisen/ethereum-euro-kurs");

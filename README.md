@@ -7,6 +7,14 @@ Nextcloud App, um Investments und Investmentsentwicklungsdaten anzuzeigen.
 Aufrufen:
 
 ```
+docker exec --user www-data nextcloud php /var/www/html/custom_apps/investments/tests/Repositories/Finanzen100DeRepositoryTest.php
+```
+
+```
+docker exec --user www-data nextcloud php /var/www/html/custom_apps/investments/tests/Repositories/FinanzenNetRepositoryTest.php
+```
+
+```
 docker exec --user www-data nextcloud php /var/www/html/custom_apps/investments/tests/Repositories/InvestmentsRepositoryTest.php
 ```
 

@@ -3,18 +3,25 @@
 namespace OCA\Investments\Repositories;
 
 use OCA\Investments\Repositories\IFinanzenRepository;
+use OCP\Http\Client\IClientService;
 
 
 class Finanzen100DeRepository implements IFinanzenRepository
 {
+    private IClientService $clientService;
+
+    public function __construct(IClientService $clientService)
+    {
+        $this->clientService = $clientService;
+    }
+
     public function parse(string $link): float
     {
-        $responseBody = file_get_contents($link);
+        $client = $this->clientService->newClient();
 
-        if ($responseBody === false)
-        {
-            throw new \Exception("Fehler beim Abrufen der URL: " . $link);
-        }
+        $response = $client->get($link);
+
+        $responseBody = $response->getBody();
 
         if (preg_match('/<strong class="quote__price__price">([0-9 , .]*)<\/strong>/', $responseBody, $matches))
         {
