@@ -159,7 +159,7 @@ class InvestmentAlarm
     public static function fromDao($investment, $investmentAlarmDao)
     {
         $investmentAlarm = new InvestmentAlarm();
-        $investmentAlarm->link = $investment->linkFinanzenNet;
+        $investmentAlarm->link = $investment->linkFinanzen100De;
         $investmentAlarm->lowerThreshold = $investmentAlarmDao->lowerThreshold;
         $investmentAlarm->upperThreshold = $investmentAlarmDao->upperThreshold;
         $investmentAlarm->name = $investment->name;
@@ -222,7 +222,7 @@ class Investment
     {
         $investment = new Investment();
         $investment->dividends = $daoInvestment->dividends;
-        $investment->link = $daoInvestment->linkFinanzenNet;
+        $investment->link = $daoInvestment->linkFinanzen100De;
         $investment->name = $daoInvestment->name;
         $investment->purchases = array_map([Purchase::class, "fromDao"], $daoInvestment->purchases);
 

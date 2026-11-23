@@ -2,7 +2,7 @@
 
 namespace OCA\Investments\AppInfo;
 
-use OCA\Investments\Repositories\FinanzenNetRepository;
+use OCA\Investments\Repositories\Finanzen100DeRepository;
 use OCA\Investments\Repositories\InvestmentsRepository;
 use OCA\Investments\Services\FinanzenService;
 use OCA\Investments\Services\InvestmentsDevelopmentService;
@@ -43,7 +43,7 @@ class Application extends App implements IBootstrap
 
         $context->registerService(IFinanzenRepository::class, function($c)
         {
-            return $c->get(FinanzenNetRepository::class);
+            return $c->get(Finanzen100DeRepository::class);
         });
 
         $context->registerService(InvestmentsService::class, function($c)
